@@ -1,4 +1,5 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookingsAsync()
+        public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookingsAsync()
         {
             var bookings = await _bookingService.GetAllBookingsAsync();
             return Ok(bookings);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBookingAsync(int id)
+        public async Task<ActionResult<BookingDto>> GetBookingAsync(int id)
         {
             var booking = await _bookingService.GetBookingByIdAsync(id);
             if (booking == null)
@@ -48,12 +49,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Booking>> CreateBookingAsync(Booking booking)
+        public async Task<ActionResult<BookingDto>> CreateBookingAsync(CreateBookingDto createBookingDto)
         {
             try
             {
-                await _bookingService.CreateBookingAsync(booking);
-                return CreatedAtAction(nameof(GetBookingAsync), new { id = booking.BookingId }, booking);
+                await _bookingService.CreateBookingAsync(createBookingDto);
+                //the created booking ID is supposed to be retrievable here
+                var createdBooking = await _bookingService.GetBookingByIdAsync(createBookingDto.CustomerId);
+                return CreatedAtAction(nameof(GetBookingAsync), new { id = createdBooking.Id }, createdBooking);
             }
             catch (Exception ex)
             {
@@ -62,11 +65,16 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBookingAsync(int id, Booking booking)
+        public async Task<IActionResult> UpdateBookingAsync(int id, CreateBookingDto updateBookingDto)
         {
+            if (id != updateBookingDto.CustomerId)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                await _bookingService.UpdateBookingAsync(id, booking);
+                await _bookingService.UpdateBookingAsync(id, updateBookingDto);
                 return NoContent();
             }
             catch (ArgumentException ex)

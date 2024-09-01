@@ -1,5 +1,6 @@
 ﻿using Labb1_ResturantBookingSystem.Data.Repos.IRepos;
 using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
 
 namespace Labb1_ResturantBookingSystem.Services
@@ -12,8 +13,15 @@ namespace Labb1_ResturantBookingSystem.Services
         {
             _menuRepository = menuRepository;
         }
-        public async Task AddDishAsync(Menu menu)
+        public async Task AddDishAsync(CreateMenuDto createMenuDto)
         {
+            var menu = new Menu
+            {
+                NameOfDish = createMenuDto.NameOfDish,
+                Price = createMenuDto.Price
+                // IsAvailable will be set later by the admin
+            };
+
             await _menuRepository.AddDishAsync(menu);
             await _menuRepository.SaveChangesAsync();
         }
@@ -24,14 +32,33 @@ namespace Labb1_ResturantBookingSystem.Services
             await _menuRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Menu>> GetAllDishesAsync()
+        public async Task<IEnumerable<MenuDto>> GetAllDishesAsync()
         {
-            return await _menuRepository.GetAllDishesAsync();
+            var dishes = await _menuRepository.GetAllDishesAsync();
+
+            
+            return dishes.Select(dish => new MenuDto
+            {
+                MenuId = dish.MenuId,
+                NameOfDish = dish.NameOfDish,
+                Price = dish.Price,
+                IsAvailable = dish.IsAvailable
+            });
         }
 
-        public async Task<Menu> GetDishByIdAsync(int id)
+        public async Task<MenuDto> GetDishByIdAsync(int id)
         {
-            return await _menuRepository.GetDishByIdAsync(id);
+            var dish = await _menuRepository.GetDishByIdAsync(id);
+            if (dish == null) return null;
+
+            // Convert Menu entity to MenuDto
+            return new MenuDto
+            {
+                MenuId = dish.MenuId,
+                NameOfDish = dish.NameOfDish,
+                Price = dish.Price,
+                IsAvailable = dish.IsAvailable
+            };
         }
 
         public async Task<bool> IsDishAvailableAsync(int id)
@@ -39,7 +66,7 @@ namespace Labb1_ResturantBookingSystem.Services
             return await _menuRepository.IsDishAvailableAsync(id);
         }
 
-        public async Task UpdateMenuAsync(int id, Menu updatedMenuDish)
+        public async Task UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto)
         {
             var menuDish = await _menuRepository.GetDishByIdAsync(id);
             if (menuDish == null)
@@ -47,9 +74,10 @@ namespace Labb1_ResturantBookingSystem.Services
                 throw new ArgumentException("The dish is not found.");
             }
 
-            menuDish.NameOfDish = updatedMenuDish.NameOfDish;
-            menuDish.Price = updatedMenuDish.Price;
-            
+            menuDish.NameOfDish = updateMenuDto.NameOfDish;
+            menuDish.Price = updateMenuDto.Price;
+            menuDish.IsAvailable = updateMenuDto.IsAvailable;
+
             await _menuRepository.UpdateMenuAsync(menuDish);
             await _menuRepository.SaveChangesAsync();
 

@@ -1,4 +1,5 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services;
 using Labb1_ResturantBookingSystem.Services.IServices;
 using Microsoft.AspNetCore.Http;
@@ -19,14 +20,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Menu>>> GetAllDishesAsync()
+        public async Task<ActionResult<IEnumerable<MenuDto>>> GetAllDishesAsync()
         {
             var dishes = await _menuService.GetAllDishesAsync();
             return Ok(dishes);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Menu>> GetDishByIdAsync(int id)
+        public async Task<ActionResult<MenuDto>> GetDishByIdAsync(int id)
         {
             var dish = await _menuService.GetDishByIdAsync(id);
 
@@ -40,51 +41,67 @@ namespace Labb1_ResturantBookingSystem.Controllers
         [HttpGet("/IsAvailable/{id}")]
         public async Task<ActionResult<bool>> IsDishAvailableAsync(int id)
         {
-            var IsAvailable = await _menuService.IsDishAvailableAsync(id);
-            return Ok(IsAvailable);
+            var isAvailable = await _menuService.IsDishAvailableAsync(id);
+            return Ok(isAvailable);
         }
 
-
         [HttpPost]
-        public async Task<ActionResult<Menu>> AddDishAsync(Menu menu)
+        public async Task<ActionResult<MenuDto>> AddDishAsync(int id, CreateMenuDto createMenuDto)
         {
-            await _menuService.AddDishAsync(menu);
-            return CreatedAtAction(nameof(GetDishByIdAsync), new { id = menu.MenuId }, menu);
+            try
+            {
+                await _menuService.AddDishAsync(createMenuDto);
+
+                // Assuming menu ID is set during creation (from the database)
+                // i might need to fetch the newly created menu item???
+                var createdDish = await _menuService.GetDishByIdAsync(id);
+                if (createdDish == null)
+                {
+                    return NotFound();
+                }
+                return CreatedAtAction(nameof(GetDishByIdAsync), new { id = createdDish.MenuId }, createdDish);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMenuAsync(int id, Menu menu)
+        public async Task<IActionResult> UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto)
         {
-            if (id != menu.MenuId)
+            if (id != updateMenuDto.MenuId)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _menuService.UpdateMenuAsync(id, menu);
+                await _menuService.UpdateMenuAsync(id, updateMenuDto);
+                return NoContent();
             }
             catch (ArgumentException)
             {
                 return NotFound();
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDishAsync(int id)
         {
             try
             {
                 await _menuService.DeleteDishAsync(id);
+                return NoContent();
             }
             catch (ArgumentException)
             {
                 return NotFound();
             }
-
-            return NoContent(); 
         }
 
     }

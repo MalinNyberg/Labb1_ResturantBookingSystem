@@ -1,4 +1,5 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersAsync()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
         {
             var customers = await _customerService.GetAllCustomersAsync();
             return Ok(customers);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerAsync(int id)
+        public async Task<ActionResult<CustomerDto>> GetCustomerAsync(int id)
         {
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
@@ -34,12 +35,15 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Customer>> CreateCustomerAsync(Customer customer)
+        public async Task<ActionResult<CustomerDto>> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
         {
             try
             {
-                await _customerService.CreateCustomerAsync(customer);
-                return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
+                await _customerService.CreateCustomerAsync(createCustomerDto);
+
+                // Assuming the created customer needs to be fetched by some unique identifier, adjust as needed
+                var createdCustomer = await _customerService.GetCustomerByIdAsync(createCustomerDto.Id); 
+                return CreatedAtAction(nameof(GetCustomerAsync), new { id = createdCustomer.Id }, createdCustomer);
             }
             catch (Exception ex)
             {
@@ -48,11 +52,11 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomerAsync(int id, Customer customer)
+        public async Task<IActionResult> UpdateCustomerAsync(int id, CustomerDto updateCustomerDto)
         {
             try
             {
-                await _customerService.UpdateCustomerAsync(id, customer);
+                await _customerService.UpdateCustomerAsync(id, updateCustomerDto);
                 return NoContent();
             }
             catch (ArgumentException ex)
@@ -77,6 +81,11 @@ namespace Labb1_ResturantBookingSystem.Controllers
             {
                 return NotFound(ex.Message);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
+        
 }

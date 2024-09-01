@@ -1,4 +1,5 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,21 +11,21 @@ namespace Labb1_ResturantBookingSystem.Controllers
     public class TablesController : ControllerBase
     {
         private readonly ITableService _tableService;
-        public TablesController(ITableService tableService) 
+
+        public TablesController(ITableService tableService)
         {
             _tableService = tableService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Table>>> GetTablesAsync() 
+        public async Task<ActionResult<IEnumerable<TableDto>>> GetTablesAsync()
         {
-            var Tables = await _tableService.GetAllTablesAsync();
-            return Ok(Tables);
-        
+            var tables = await _tableService.GetAllTablesAsync();
+            return Ok(tables);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Table>> GetTableAsync(int id)
+        public async Task<ActionResult<TableDto>> GetTableAsync(int id)
         {
             var table = await _tableService.GetTableByIdAsync(id);
             if (table == null)
@@ -35,30 +36,38 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Table>> CreateTableAsync(Table table)
+        public async Task<ActionResult<TableDto>> CreateTableAsync(CreateTableDto createTableDto)
         {
-            await _tableService.CreateTableAsync(table);
-            return CreatedAtAction(nameof(GetTableAsync),new {id = table.TableId}, table);
+            try
+            {
+                await _tableService.CreateTableAsync(createTableDto);
+                // Assuming table ID will be set after creation
+                var createdTable = await _tableService.GetTableByIdAsync(createTableDto.TableNumber); 
+                return CreatedAtAction(nameof(GetTableAsync), new { id = createdTable.TableId }, createdTable);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTableAsync(int id, Table table)
+        public async Task<IActionResult> UpdateTableAsync(int id, CreateTableDto updateTableDto)
         {
-            if (id != table.TableId)
+            if (id != updateTableDto.TableNumber)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _tableService.UpdateTableAsync(id, table);
+                await _tableService.UpdateTableAsync(id, updateTableDto);
+                return NoContent();
             }
             catch (ArgumentException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -67,13 +76,12 @@ namespace Labb1_ResturantBookingSystem.Controllers
             try
             {
                 await _tableService.DeleteTableAsync(id);
+                return NoContent();
             }
             catch (ArgumentException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
     }

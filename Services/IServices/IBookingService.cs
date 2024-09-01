@@ -1,14 +1,15 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 
 namespace Labb1_ResturantBookingSystem.Services.IServices
 {
     public interface IBookingService
     {
-        Task<IEnumerable<Booking>> GetAllBookingsAsync();
-        Task<Booking> GetBookingByIdAsync(int id);
+        Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
+        Task<BookingDto> GetBookingByIdAsync(int id);
         Task<bool> IsTableAvailableAsync(int tableId, DateTime date);
-        Task CreateBookingAsync(Booking booking);
-        Task UpdateBookingAsync(int id, Booking booking);
+        Task CreateBookingAsync(CreateBookingDto createBookingDto);
+        Task UpdateBookingAsync(int id, CreateBookingDto createBookingDto);
         Task DeleteBookingAsync(int id);
     }
 }

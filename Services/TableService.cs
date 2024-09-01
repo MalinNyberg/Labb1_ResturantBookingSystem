@@ -1,5 +1,6 @@
 ﻿using Labb1_ResturantBookingSystem.Data.Repos.IRepos;
 using Labb1_ResturantBookingSystem.Models;
+using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
 
 namespace Labb1_ResturantBookingSystem.Services
@@ -12,8 +13,15 @@ namespace Labb1_ResturantBookingSystem.Services
         {
             _tableRepository = tableRepository;
         }
-        public async Task CreateTableAsync(Table table)
+
+        public async Task CreateTableAsync(CreateTableDto createTableDto)
         {
+            var table = new Table
+            {
+                NumberOfSeats = createTableDto.NumberOfSeats,
+                TableNumber = createTableDto.TableNumber
+            };
+
             await _tableRepository.AddTableAsync(table);
             await _tableRepository.SaveChangesAsync();
         }
@@ -24,17 +32,34 @@ namespace Labb1_ResturantBookingSystem.Services
             await _tableRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Table>> GetAllTablesAsync()
+        public async Task<IEnumerable<TableDto>> GetAllTablesAsync()
         {
-            return await _tableRepository.GetAllTablesAsync();
+            var tables = await _tableRepository.GetAllTablesAsync();
+
+            
+            return tables.Select(t => new TableDto
+            {
+                TableId = t.TableId,
+                NumberOfSeats = t.NumberOfSeats,
+                TableNumber = t.TableNumber
+            });
         }
 
-        public async Task<Table> GetTableByIdAsync(int id)
+        public async Task<TableDto> GetTableByIdAsync(int id)
         {
-            return await _tableRepository.GetTableByIdAsync(id);
+            var table = await _tableRepository.GetTableByIdAsync(id);
+            if (table == null) return null;
+
+            
+            return new TableDto
+            {
+                TableId = table.TableId,
+                NumberOfSeats = table.NumberOfSeats,
+                TableNumber = table.TableNumber
+            };
         }
 
-        public async Task UpdateTableAsync(int id, Table table)
+        public async Task UpdateTableAsync(int id, CreateTableDto updateTableDto)
         {
             var existingTable = await _tableRepository.GetTableByIdAsync(id);
             if (existingTable == null)
@@ -42,8 +67,8 @@ namespace Labb1_ResturantBookingSystem.Services
                 throw new ArgumentException("Table not found.");
             }
 
-            existingTable.NumberOfSeats = table.NumberOfSeats;
-
+            existingTable.NumberOfSeats = updateTableDto.NumberOfSeats;
+            existingTable.TableNumber = updateTableDto.TableNumber;
 
             await _tableRepository.UpdateTableAsync(existingTable);
             await _tableRepository.SaveChangesAsync();
