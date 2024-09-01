@@ -5,8 +5,8 @@ namespace Labb1_ResturantBookingSystem.Services.IServices
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<Customer>> GetAllCustomersAsync();
-        Task<Customer> GetCustomerByIdAsync(int id);
+        Task<IEnumerable<CustomerDto>> GetAllCustomersAsync();
+        Task<CustomerDto> GetCustomerByIdAsync(int id);
         Task CreateCustomerAsync(CreateCustomerDto createCustomerDto);
         Task UpdateCustomerAsync(int id, CustomerDto updateCutomerDto);
         Task DeleteCustomerAsync(int id);

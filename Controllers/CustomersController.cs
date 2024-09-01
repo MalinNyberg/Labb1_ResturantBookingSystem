@@ -17,14 +17,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAllCustomers")]
         public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
         {
             var customers = await _customerService.GetAllCustomersAsync();
             return Ok(customers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/GetCustomer/{id}")]
         public async Task<ActionResult<CustomerDto>> GetCustomerAsync(int id)
         {
             var customer = await _customerService.GetCustomerByIdAsync(id);
@@ -34,7 +34,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             return Ok(customer);
         }
 
-        [HttpPost]
+        [HttpPost("/CreateCustomer")]
         public async Task<ActionResult<CustomerDto>> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
         {
             try
@@ -51,7 +51,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/UpdateCustomer/{id}")]
         public async Task<IActionResult> UpdateCustomerAsync(int id, CustomerDto updateCustomerDto)
         {
             try
@@ -69,7 +69,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/DeleteCustomer/{id}")]
         public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
             try

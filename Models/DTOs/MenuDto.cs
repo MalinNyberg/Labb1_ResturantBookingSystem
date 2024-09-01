@@ -12,12 +12,11 @@
     {
         public string NameOfDish { get; set; }
         public decimal Price { get; set; }
-        // IsAvailable is not included here because it will be managed by the admin after creation
+        public bool IsAvailable { get; set; }
     }
 
     public class UpdateMenuDto
-    {
-        public int MenuId { get; set; }    
+    {  
         public string NameOfDish { get; set; }
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; } // Admin can set availability status

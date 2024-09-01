@@ -17,14 +17,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
             _tableService = tableService;
         }
 
-        [HttpGet]
+        [HttpGet("/GetTables")]
         public async Task<ActionResult<IEnumerable<TableDto>>> GetTablesAsync()
         {
             var tables = await _tableService.GetAllTablesAsync();
             return Ok(tables);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/GetTable/{id}")]
         public async Task<ActionResult<TableDto>> GetTableAsync(int id)
         {
             var table = await _tableService.GetTableByIdAsync(id);
@@ -35,7 +35,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             return Ok(table);
         }
 
-        [HttpPost]
+        [HttpPost("/CreateTable")]
         public async Task<ActionResult<TableDto>> CreateTableAsync(CreateTableDto createTableDto)
         {
             try
@@ -51,7 +51,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/UpdateTable/{id}")]
         public async Task<IActionResult> UpdateTableAsync(int id, CreateTableDto updateTableDto)
         {
             if (id != updateTableDto.TableNumber)
@@ -70,7 +70,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/DeleteTable/{id}")]
         public async Task<IActionResult> DeleteTableAsync(int id)
         {
             try

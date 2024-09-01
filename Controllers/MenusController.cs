@@ -19,14 +19,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
             _menuService = menuService;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAllDishes")]
         public async Task<ActionResult<IEnumerable<MenuDto>>> GetAllDishesAsync()
         {
             var dishes = await _menuService.GetAllDishesAsync();
             return Ok(dishes);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/GetDish/{id}")]
         public async Task<ActionResult<MenuDto>> GetDishByIdAsync(int id)
         {
             var dish = await _menuService.GetDishByIdAsync(id);
@@ -45,7 +45,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             return Ok(isAvailable);
         }
 
-        [HttpPost]
+        [HttpPost("/AddDish")]
         public async Task<ActionResult<MenuDto>> AddDishAsync(int id, CreateMenuDto createMenuDto)
         {
             try
@@ -67,14 +67,10 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/UpdateDish{id}")]
         public async Task<IActionResult> UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto)
         {
-            if (id != updateMenuDto.MenuId)
-            {
-                return BadRequest();
-            }
-
+           
             try
             {
                 await _menuService.UpdateMenuAsync(id, updateMenuDto);
@@ -90,7 +86,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/DeleteDish{id}")]
         public async Task<IActionResult> DeleteDishAsync(int id)
         {
             try

@@ -15,6 +15,7 @@
         public int TableId { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
+
     }
 
 }

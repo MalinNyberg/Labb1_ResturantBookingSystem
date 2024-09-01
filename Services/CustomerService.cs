@@ -1,10 +1,11 @@
 ﻿using Labb1_ResturantBookingSystem.Data.Repos.IRepos;
 using Labb1_ResturantBookingSystem.Models;
 using Labb1_ResturantBookingSystem.Models.DTOs;
+using Labb1_ResturantBookingSystem.Services.IServices;
 
 namespace Labb1_ResturantBookingSystem.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
 

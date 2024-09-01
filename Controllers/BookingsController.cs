@@ -17,14 +17,14 @@ namespace Labb1_ResturantBookingSystem.Controllers
             _bookingService = bookingService;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAllBookings")]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookingsAsync()
         {
             var bookings = await _bookingService.GetAllBookingsAsync();
             return Ok(bookings);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/GetBooking/{id}")]
         public async Task<ActionResult<BookingDto>> GetBookingAsync(int id)
         {
             var booking = await _bookingService.GetBookingByIdAsync(id);
@@ -34,7 +34,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             return Ok(booking);
         }
 
-        [HttpGet("availability")]
+        [HttpGet("/availability")]
         public async Task<ActionResult<bool>> IsTableAvailable(int tableId, DateTime date)
         {
             try
@@ -48,7 +48,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("/CreateBooking")]
         public async Task<ActionResult<BookingDto>> CreateBookingAsync(CreateBookingDto createBookingDto)
         {
             try
@@ -64,7 +64,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/UpdateBooking/{id}")]
         public async Task<IActionResult> UpdateBookingAsync(int id, CreateBookingDto updateBookingDto)
         {
             if (id != updateBookingDto.CustomerId)
@@ -87,7 +87,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/DeleteBooking/{id}")]
         public async Task<IActionResult> DeleteBookingAsync(int id)
         {
             try
