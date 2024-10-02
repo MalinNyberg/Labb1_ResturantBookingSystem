@@ -12,6 +12,7 @@ namespace Labb1_ResturantBookingSystem.Models
         [MaxLength(255)]
         public string NameOfDish { get; set; }
 
+
         [Required]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; }

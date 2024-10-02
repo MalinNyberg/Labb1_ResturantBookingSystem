@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Labb1_ResturantBookingSystem.Migrations
 {
-    [DbContext(typeof(BookingSystemContext))]
-    [Migration("20240830202415_SeedInitialData")]
-    partial class SeedInitialData
+    [DbContext(typeof(MomokoRestuarantDbContext))]
+    [Migration("20241002093827_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,9 +45,6 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.Property<int>("TableId")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
-
                     b.HasKey("BookingId");
 
                     b.HasIndex("CustomerId");
@@ -61,19 +58,17 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         {
                             BookingId = 1,
                             CustomerId = 1,
-                            Date = new DateTime(2024, 8, 31, 22, 24, 15, 375, DateTimeKind.Local).AddTicks(138),
+                            Date = new DateTime(2024, 10, 3, 11, 38, 26, 645, DateTimeKind.Local).AddTicks(7207),
                             NumberOfPeople = 0,
-                            TableId = 1,
-                            Time = new TimeSpan(0, 18, 0, 0, 0)
+                            TableId = 1
                         },
                         new
                         {
                             BookingId = 2,
                             CustomerId = 2,
-                            Date = new DateTime(2024, 9, 1, 22, 24, 15, 375, DateTimeKind.Local).AddTicks(195),
+                            Date = new DateTime(2024, 10, 4, 11, 38, 26, 645, DateTimeKind.Local).AddTicks(7260),
                             NumberOfPeople = 0,
-                            TableId = 2,
-                            Time = new TimeSpan(0, 19, 0, 0, 0)
+                            TableId = 2
                         });
                 });
 
@@ -154,29 +149,29 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         {
                             MenuId = 1,
                             IsAvailable = false,
-                            NameOfDish = "Spaghetti Bolognese",
+                            NameOfDish = "Chicken Broth Ramen",
                             Price = 12.99m
                         },
                         new
                         {
                             MenuId = 2,
                             IsAvailable = false,
-                            NameOfDish = "Caesar Salad",
-                            Price = 9.99m
+                            NameOfDish = "Tempura Rolls",
+                            Price = 12.99m
                         },
                         new
                         {
                             MenuId = 3,
                             IsAvailable = false,
-                            NameOfDish = "Pizza Vesuvio",
-                            Price = 8.99m
+                            NameOfDish = "Wagyu Nigiri",
+                            Price = 35.99m
                         },
                         new
                         {
                             MenuId = 4,
                             IsAvailable = false,
-                            NameOfDish = "Swedish Meatballs - Italian style",
-                            Price = 10.99m
+                            NameOfDish = "Momoko tasting menu",
+                            Price = 99.99m
                         });
                 });
 

@@ -4,16 +4,19 @@ using Labb1_ResturantBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace Labb1_ResturantBookingSystem.Migrations
 {
-    [DbContext(typeof(BookingSystemContext))]
-    partial class BookingSystemContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MomokoRestuarantDbContext))]
+    [Migration("20241002142221_AddBookingDetails")]
+    partial class AddBookingDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,17 +36,26 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TableId")
                         .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
 
                     b.HasKey("BookingId");
 
@@ -52,26 +64,6 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasIndex("TableId");
 
                     b.ToTable("bookings");
-
-                    b.HasData(
-                        new
-                        {
-                            BookingId = 1,
-                            CustomerId = 1,
-                            Date = new DateTime(2024, 8, 31, 22, 24, 15, 375, DateTimeKind.Local).AddTicks(138),
-                            NumberOfPeople = 0,
-                            TableId = 1,
-                            Time = new TimeSpan(0, 18, 0, 0, 0)
-                        },
-                        new
-                        {
-                            BookingId = 2,
-                            CustomerId = 2,
-                            Date = new DateTime(2024, 9, 1, 22, 24, 15, 375, DateTimeKind.Local).AddTicks(195),
-                            NumberOfPeople = 0,
-                            TableId = 2,
-                            Time = new TimeSpan(0, 19, 0, 0, 0)
-                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Customer", b =>
@@ -151,29 +143,29 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         {
                             MenuId = 1,
                             IsAvailable = false,
-                            NameOfDish = "Spaghetti Bolognese",
+                            NameOfDish = "Chicken Broth Ramen",
                             Price = 12.99m
                         },
                         new
                         {
                             MenuId = 2,
                             IsAvailable = false,
-                            NameOfDish = "Caesar Salad",
-                            Price = 9.99m
+                            NameOfDish = "Tempura Rolls",
+                            Price = 12.99m
                         },
                         new
                         {
                             MenuId = 3,
                             IsAvailable = false,
-                            NameOfDish = "Pizza Vesuvio",
-                            Price = 8.99m
+                            NameOfDish = "Wagyu Nigiri",
+                            Price = 35.99m
                         },
                         new
                         {
                             MenuId = 4,
                             IsAvailable = false,
-                            NameOfDish = "Swedish Meatballs - Italian style",
-                            Price = 10.99m
+                            NameOfDish = "Momoko tasting menu",
+                            Price = 99.99m
                         });
                 });
 

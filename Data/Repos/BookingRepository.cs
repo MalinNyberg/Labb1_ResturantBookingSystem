@@ -6,9 +6,9 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class BookingRepository : IBookingRepository
     {
-        private readonly BookingSystemContext _context;
+        private readonly MomokoRestuarantDbContext _context;
 
-        public BookingRepository(BookingSystemContext context)
+        public BookingRepository(MomokoRestuarantDbContext context)
         {
             _context = context;
         }

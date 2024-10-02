@@ -1,15 +1,14 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Labb1_ResturantBookingSystem.Data
 {
-    public class BookingSystemContext : DbContext
+    public class MomokoRestuarantDbContext : DbContext
     {
-       public BookingSystemContext(DbContextOptions<BookingSystemContext> options) : base(options) 
-       {
-            
-       }
+        public MomokoRestuarantDbContext(DbContextOptions<MomokoRestuarantDbContext> options) : base(options)
+        {
+
+        }
 
         public DbSet<Customer> customers { get; set; }
         public DbSet<Table> tables { get; set; }
@@ -30,10 +29,10 @@ namespace Labb1_ResturantBookingSystem.Data
 
             // Seed MenuItems
             modelBuilder.Entity<Menu>().HasData(
-                new Menu { MenuId = 1, NameOfDish = "Spaghetti Bolognese", Price = 12.99M },
-                new Menu { MenuId = 2, NameOfDish = "Caesar Salad", Price = 9.99M },
-                new Menu { MenuId = 3, NameOfDish = "Pizza Vesuvio", Price = 8.99M },
-                new Menu { MenuId = 4, NameOfDish = "Swedish Meatballs - Italian style", Price = 10.99M }
+                new Menu { MenuId = 1, NameOfDish = "Chicken Broth Ramen", Price = 12.99M },
+                new Menu { MenuId = 2, NameOfDish = "Tempura Rolls", Price = 12.99M },
+                new Menu { MenuId = 3, NameOfDish = "Wagyu Nigiri", Price = 35.99M },
+                new Menu { MenuId = 4, NameOfDish = "Momoko tasting menu", Price = 99.99M }
             );
 
             // Seed Tables
@@ -46,14 +45,11 @@ namespace Labb1_ResturantBookingSystem.Data
 
             );
 
-            // Seed Bookings
-            modelBuilder.Entity<Booking>().HasData(
-                new Booking { BookingId = 1, CustomerId = 1, TableId = 1, Date = DateTime.Now.AddDays(1), Time = new TimeSpan(18, 0, 0) },
-                new Booking { BookingId = 2, CustomerId = 2, TableId = 2, Date = DateTime.Now.AddDays(2), Time = new TimeSpan(19, 0, 0) }
-            );
+            //// Seed Bookings
+            //modelBuilder.Entity<Booking>().HasData(
+            //    new Booking { BookingId = 1, CustomerId = 1, TableId = 1, Date = DateTime.Now.AddDays(1) },
+            //    new Booking { BookingId = 2, CustomerId = 2, TableId = 2, Date = DateTime.Now.AddDays(2) }
+            //);
         }
-
     }
 }
-
-//Data Source=(localdb)\.;Initial Catalog=BookingSystemDB;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=False

@@ -19,7 +19,7 @@
     {  
         public string NameOfDish { get; set; }
         public decimal Price { get; set; }
-        public bool IsAvailable { get; set; } // Admin can set availability status
+        public bool IsAvailable { get; set; } 
     }
 
 }

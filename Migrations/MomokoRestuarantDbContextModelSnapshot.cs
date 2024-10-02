@@ -4,19 +4,16 @@ using Labb1_ResturantBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace Labb1_ResturantBookingSystem.Migrations
 {
-    [DbContext(typeof(BookingSystemContext))]
-    [Migration("20240822125425_init")]
-    partial class init
+    [DbContext(typeof(MomokoRestuarantDbContext))]
+    partial class MomokoRestuarantDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,17 +33,26 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TableId")
                         .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
 
                     b.HasKey("BookingId");
 
@@ -78,6 +84,32 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "John Doe",
+                            PhoneNumber = "1234567890"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Jane Smith",
+                            PhoneNumber = "0987654321"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Malin Nyberg",
+                            PhoneNumber = "0701234567"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Fredrik Jansson",
+                            PhoneNumber = "0707654321"
+                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Menu", b =>
@@ -102,6 +134,36 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("MenuId");
 
                     b.ToTable("menus");
+
+                    b.HasData(
+                        new
+                        {
+                            MenuId = 1,
+                            IsAvailable = false,
+                            NameOfDish = "Chicken Broth Ramen",
+                            Price = 12.99m
+                        },
+                        new
+                        {
+                            MenuId = 2,
+                            IsAvailable = false,
+                            NameOfDish = "Tempura Rolls",
+                            Price = 12.99m
+                        },
+                        new
+                        {
+                            MenuId = 3,
+                            IsAvailable = false,
+                            NameOfDish = "Wagyu Nigiri",
+                            Price = 35.99m
+                        },
+                        new
+                        {
+                            MenuId = 4,
+                            IsAvailable = false,
+                            NameOfDish = "Momoko tasting menu",
+                            Price = 99.99m
+                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Table", b =>
@@ -121,6 +183,38 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("TableId");
 
                     b.ToTable("tables");
+
+                    b.HasData(
+                        new
+                        {
+                            TableId = 1,
+                            NumberOfSeats = 4,
+                            TableNumber = 1
+                        },
+                        new
+                        {
+                            TableId = 2,
+                            NumberOfSeats = 2,
+                            TableNumber = 2
+                        },
+                        new
+                        {
+                            TableId = 3,
+                            NumberOfSeats = 6,
+                            TableNumber = 3
+                        },
+                        new
+                        {
+                            TableId = 4,
+                            NumberOfSeats = 4,
+                            TableNumber = 4
+                        },
+                        new
+                        {
+                            TableId = 5,
+                            NumberOfSeats = 8,
+                            TableNumber = 5
+                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Booking", b =>

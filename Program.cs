@@ -5,6 +5,8 @@ using Labb1_ResturantBookingSystem.Services.IServices;
 using Labb1_ResturantBookingSystem.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BookingSystemContext>(options =>
+builder.Services.AddDbContext<MomokoRestuarantDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
@@ -40,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -47,3 +50,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

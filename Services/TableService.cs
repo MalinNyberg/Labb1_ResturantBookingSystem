@@ -14,6 +14,7 @@ namespace Labb1_ResturantBookingSystem.Services
             _tableRepository = tableRepository;
         }
 
+        //Metod för att skapa ett nytt bord
         public async Task CreateTableAsync(CreateTableDto createTableDto)
         {
             var table = new Table
@@ -26,12 +27,14 @@ namespace Labb1_ResturantBookingSystem.Services
             await _tableRepository.SaveChangesAsync();
         }
 
+        //metod för att radera ett bord
         public async Task DeleteTableAsync(int id)
         {
             await _tableRepository.DeleteTableAsync(id);
             await _tableRepository.SaveChangesAsync();
         }
 
+        //metod för att hämta alla bord
         public async Task<IEnumerable<TableDto>> GetAllTablesAsync()
         {
             var tables = await _tableRepository.GetAllTablesAsync();
@@ -45,6 +48,7 @@ namespace Labb1_ResturantBookingSystem.Services
             });
         }
 
+        //metod för att hämta ett specifikt bord baserat på id
         public async Task<TableDto> GetTableByIdAsync(int id)
         {
             var table = await _tableRepository.GetTableByIdAsync(id);
@@ -59,6 +63,7 @@ namespace Labb1_ResturantBookingSystem.Services
             };
         }
 
+        //metod för att uppdatera ett befintligt bord
         public async Task UpdateTableAsync(int id, CreateTableDto updateTableDto)
         {
             var existingTable = await _tableRepository.GetTableByIdAsync(id);

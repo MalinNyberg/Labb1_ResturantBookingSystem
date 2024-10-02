@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Labb1_ResturantBookingSystem.Migrations
 {
     /// <inheritdoc />
@@ -61,7 +63,6 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     BookingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "time", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
                     TableId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false)
@@ -81,6 +82,49 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         principalTable: "tables",
                         principalColumn: "TableId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "customers",
+                columns: new[] { "Id", "Name", "PhoneNumber" },
+                values: new object[,]
+                {
+                    { 1, "John Doe", "1234567890" },
+                    { 2, "Jane Smith", "0987654321" },
+                    { 3, "Malin Nyberg", "0701234567" },
+                    { 4, "Fredrik Jansson", "0707654321" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "menus",
+                columns: new[] { "MenuId", "IsAvailable", "NameOfDish", "Price" },
+                values: new object[,]
+                {
+                    { 1, false, "Chicken Broth Ramen", 12.99m },
+                    { 2, false, "Tempura Rolls", 12.99m },
+                    { 3, false, "Wagyu Nigiri", 35.99m },
+                    { 4, false, "Momoko tasting menu", 99.99m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "tables",
+                columns: new[] { "TableId", "NumberOfSeats", "TableNumber" },
+                values: new object[,]
+                {
+                    { 1, 4, 1 },
+                    { 2, 2, 2 },
+                    { 3, 6, 3 },
+                    { 4, 4, 4 },
+                    { 5, 8, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "bookings",
+                columns: new[] { "BookingId", "CustomerId", "Date", "NumberOfPeople", "TableId" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2024, 10, 3, 11, 38, 26, 645, DateTimeKind.Local).AddTicks(7207), 0, 1 },
+                    { 2, 2, new DateTime(2024, 10, 4, 11, 38, 26, 645, DateTimeKind.Local).AddTicks(7260), 0, 2 }
                 });
 
             migrationBuilder.CreateIndex(

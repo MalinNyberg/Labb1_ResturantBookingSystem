@@ -3,19 +3,21 @@
     public class BookingDto
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int TableId { get; set; }
+        
+        public string CustomerName { get; set; }
+
+        public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public int NumberOfPeople { get; set; }
+
         public DateTime Date { get; set; }
-        public TimeSpan Time { get; set; }
+
+        public int TableId { get; set; }
+
     }
 
-    public class CreateBookingDto
-    {
-        public int CustomerId { get; set; }
-        public int TableId { get; set; }
-        public DateTime Date { get; set; }
-        public TimeSpan Time { get; set; }
-
-    }
+    
 
 }
