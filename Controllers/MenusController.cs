@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Labb1_ResturantBookingSystem.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class MenusController : ControllerBase
     {
         // Dependency injection
@@ -48,7 +48,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         //  GET-metod för att kontrollera om en rätt är tillgänglig.
-        [HttpGet("/IsAvailable/{id}")]
+        [HttpGet("/IsDishAvailable/{id}")]
         public async Task<ActionResult<bool>> IsDishAvailableAsync(int id)
         {
             // Kontrollerar om rätten är tillgänglig
@@ -59,40 +59,32 @@ namespace Labb1_ResturantBookingSystem.Controllers
 
         // POST-metod för att lägga till en ny rätt.
         [HttpPost("/AddDish")]
-        public async Task<ActionResult<MenuDto>> AddDishAsync(int id, CreateMenuDto createMenuDto)
+        public async Task<ActionResult<MenuDto>> AddDishAsync(MenuDto menuDto)
         {
             try
             {
-                // Lägger till en ny rätt
-                await _menuService.AddDishAsync(createMenuDto);
+                // Lägg till rätten och få det genererade ID:et
+               await _menuService.AddDishAsync(menuDto);
 
-                // Hämtar den nyligen skapade rätten baserat på ID (justera vid behov).
-                var createdDish = await _menuService.GetDishByIdAsync(id);
-                // Om den skapade rätten inte hittas, returnera 404 (Not Found).
-                if (createdDish == null)
-                {
-                    return NotFound();
-                }
-                // Returnerar den skapade rätten med statuskod 201 (Created)
-                return CreatedAtAction(nameof(GetDishByIdAsync), new { id = createdDish.MenuId }, createdDish);
+                // Använd det genererade ID:et i CreatedAtAction
+                return Ok("Dish created successfully");
             }
             catch (Exception ex)
             {
-                // Returnerar ett felmeddelande vid undantag.
                 return BadRequest(ex.Message);
             }
         }
 
         // PUT-metod för att uppdatera en befintlig rätt.
-        [HttpPut("/UpdateDish{id}")]
-        public async Task<IActionResult> UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto)
+        [HttpPut("/UpdateDish")]
+        public async Task<IActionResult> UpdateDishAsync(MenuDto menuDto)
         {
             try
             {
                 // Uppdaterar rätten
-                await _menuService.UpdateMenuAsync(id, updateMenuDto);
+                await _menuService.UpdateMenuAsync(menuDto);
                 // Returnerar statuskod efter uppdatering
-                return NoContent();
+                return Ok();
             }
             catch (ArgumentException)
             {
@@ -107,15 +99,15 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         // DELETE-metod för att ta bort en rätt baserat på ID.
-        [HttpDelete("/DeleteDish{id}")]
-        public async Task<IActionResult> DeleteDishAsync(int id)
+        [HttpDelete("/DeleteDish/{menuId}")]
+        public async Task<IActionResult> DeleteDishAsync(int menuId)
         {
             try
             {
                 // Tar bort en rätt
-                await _menuService.DeleteDishAsync(id);
+                await _menuService.DeleteDishAsync(menuId);
                 // Returnerar statuskod efter lyckad borttagning.
-                return NoContent();
+                return Ok();
             }
             catch (ArgumentException)
             {

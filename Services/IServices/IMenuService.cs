@@ -7,9 +7,9 @@ namespace Labb1_ResturantBookingSystem.Services.IServices
     {
         Task<IEnumerable<MenuDto>> GetAllDishesAsync();
         Task<MenuDto> GetDishByIdAsync(int id);
-        Task AddDishAsync(CreateMenuDto createMenuDto);
+        Task<int> AddDishAsync(MenuDto menuDto);
         Task DeleteDishAsync(int id);
-        Task UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto);
+        Task UpdateMenuAsync(MenuDto menuDto);
         Task<bool> IsDishAvailableAsync(int id);
     }
 }

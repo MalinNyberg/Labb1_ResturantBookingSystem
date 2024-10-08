@@ -6,15 +6,36 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class BookingRepository : IBookingRepository
     {
-        private readonly MomokoRestuarantDbContext _context;
+        private readonly RestaurantDbContext _context;
 
-        public BookingRepository(MomokoRestuarantDbContext context)
+        public BookingRepository(RestaurantDbContext context)
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<Booking>> GetAllBookingsAsync()
+        {
+            return await _context.bookings.ToListAsync();
+        }
+
+        public async Task<Booking> GetBookingByIdAsync(int id)
+        {
+            return await _context.bookings.FirstOrDefaultAsync(b => b.BookingId == id);
+        }
+
+        //public async Task<Booking> GetBookingByIdAsync(int id) 
+        //{
+        //    return await _context.bookings.FindAsync(id);
+        //}
+
         public async Task AddBookingAsync(Booking booking)
         {
             await _context.bookings.AddAsync(booking);
+        }
+
+        public async Task UpdateBookingAsync(Booking booking)
+        {
+            _context.bookings.Update(booking);
         }
 
         public async Task DeleteBookingAsync(int id)
@@ -25,25 +46,9 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
                 _context.bookings.Remove(booking);
             }
         }
-
-        public async Task<IEnumerable<Booking>> GetAllBookingsAsync()
+        public async Task SaveChangesAsync() 
         {
-           return await _context.bookings.Include(b => b.Table).ToListAsync();
-        }
-
-        public async Task<Booking> GetBookingByIdAsync(int id)
-        {
-            return await _context.bookings.Include(b => b.Table).FirstOrDefaultAsync(b => b.BookingId == id);
-        }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            return (await _context.SaveChangesAsync()) > 0;
-        }
-
-        public Task UpdateBookingAsync(Booking booking)
-        {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
     }
 }

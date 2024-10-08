@@ -6,9 +6,9 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class TableRepository : ITableRepository
     {
-        private readonly MomokoRestuarantDbContext _context;
+        private readonly RestaurantDbContext _context;
 
-        public TableRepository(MomokoRestuarantDbContext context)
+        public TableRepository(RestaurantDbContext context)
         {
             _context = context;
         }

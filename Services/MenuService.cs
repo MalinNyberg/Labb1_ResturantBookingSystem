@@ -14,19 +14,20 @@ namespace Labb1_ResturantBookingSystem.Services
         }
 
         // Metod för att lägga till en ny rätt i menyn.
-        public async Task AddDishAsync(CreateMenuDto createMenuDto)
+        public async Task<int> AddDishAsync(MenuDto menuDto)
         {
-            // Skapar en ny menyobjekt baserat på de data som skickas in via CreateMenuDto.
             var menu = new Menu
             {
-                NameOfDish = createMenuDto.NameOfDish, 
-                Price = createMenuDto.Price            
-                                                       
+                NameOfDish = menuDto.NameOfDish,
+                Price = menuDto.Price,
+                IsAvailable = menuDto.IsAvailable
             };
 
-            
             await _menuRepository.AddDishAsync(menu);
             await _menuRepository.SaveChangesAsync();
+
+            // Returnerar det nya rättens ID
+            return menuDto.MenuId;
         }
 
         // Metod för att ta bort en rätt från menyn baserat på ID.
@@ -34,7 +35,7 @@ namespace Labb1_ResturantBookingSystem.Services
         {
             // Tar bort rätten och sparar ändringarna.
             await _menuRepository.DeleteDishAsync(id);
-            await _menuRepository.SaveChangesAsync();
+            
         }
 
         // Metod för att hämta alla rätter från menyn.
@@ -78,26 +79,21 @@ namespace Labb1_ResturantBookingSystem.Services
         }
 
         // Metod för att uppdatera en befintlig rätt i menyn.
-        public async Task UpdateMenuAsync(int id, UpdateMenuDto updateMenuDto)
+        public async Task UpdateMenuAsync(MenuDto menuDto)
         {
-            // Hämtar den befintliga rätten baserat på ID
-            var menuDish = await _menuRepository.GetDishByIdAsync(id);
-            if (menuDish == null)
+
+            var menuItem = new Menu
             {
-                // undantag om rätten inte hittas.
-                throw new ArgumentException("Rätten hittades inte.");
-            }
+                MenuId = menuDto.MenuId,
+                NameOfDish = menuDto.NameOfDish,
+                Price = menuDto.Price,
+                IsAvailable = menuDto.IsAvailable
+            };
 
-            // Uppdaterar rättens information med den nya informationen.
-            menuDish.NameOfDish = updateMenuDto.NameOfDish;  
-            menuDish.Price = updateMenuDto.Price;             
-            menuDish.IsAvailable = updateMenuDto.IsAvailable; 
-
+            await _menuRepository.UpdateMenuAsync(menuItem);
             
-            await _menuRepository.UpdateMenuAsync(menuDish);
-            await _menuRepository.SaveChangesAsync();
-        }
 
+        }
 
     }  
 }

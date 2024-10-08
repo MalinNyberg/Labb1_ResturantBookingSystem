@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Labb1_ResturantBookingSystem.Migrations
 {
-    [DbContext(typeof(MomokoRestuarantDbContext))]
-    [Migration("20241002142221_AddBookingDetails")]
-    partial class AddBookingDetails
+    [DbContext(typeof(RestaurantDbContext))]
+    [Migration("20241003132800_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace Labb1_ResturantBookingSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("CustomerName")
@@ -54,7 +54,7 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TableId")
+                    b.Property<int?>("TableId")
                         .HasColumnType("int");
 
                     b.HasKey("BookingId");
@@ -87,32 +87,6 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("customers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "John Doe",
-                            PhoneNumber = "1234567890"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Jane Smith",
-                            PhoneNumber = "0987654321"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Malin Nyberg",
-                            PhoneNumber = "0701234567"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Fredrik Jansson",
-                            PhoneNumber = "0707654321"
-                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Menu", b =>
@@ -137,36 +111,6 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("MenuId");
 
                     b.ToTable("menus");
-
-                    b.HasData(
-                        new
-                        {
-                            MenuId = 1,
-                            IsAvailable = false,
-                            NameOfDish = "Chicken Broth Ramen",
-                            Price = 12.99m
-                        },
-                        new
-                        {
-                            MenuId = 2,
-                            IsAvailable = false,
-                            NameOfDish = "Tempura Rolls",
-                            Price = 12.99m
-                        },
-                        new
-                        {
-                            MenuId = 3,
-                            IsAvailable = false,
-                            NameOfDish = "Wagyu Nigiri",
-                            Price = 35.99m
-                        },
-                        new
-                        {
-                            MenuId = 4,
-                            IsAvailable = false,
-                            NameOfDish = "Momoko tasting menu",
-                            Price = 99.99m
-                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Table", b =>
@@ -186,57 +130,17 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.HasKey("TableId");
 
                     b.ToTable("tables");
-
-                    b.HasData(
-                        new
-                        {
-                            TableId = 1,
-                            NumberOfSeats = 4,
-                            TableNumber = 1
-                        },
-                        new
-                        {
-                            TableId = 2,
-                            NumberOfSeats = 2,
-                            TableNumber = 2
-                        },
-                        new
-                        {
-                            TableId = 3,
-                            NumberOfSeats = 6,
-                            TableNumber = 3
-                        },
-                        new
-                        {
-                            TableId = 4,
-                            NumberOfSeats = 4,
-                            TableNumber = 4
-                        },
-                        new
-                        {
-                            TableId = 5,
-                            NumberOfSeats = 8,
-                            TableNumber = 5
-                        });
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Booking", b =>
                 {
-                    b.HasOne("Labb1_ResturantBookingSystem.Models.Customer", "Customer")
+                    b.HasOne("Labb1_ResturantBookingSystem.Models.Customer", null)
                         .WithMany("Bookings")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
-                    b.HasOne("Labb1_ResturantBookingSystem.Models.Table", "Table")
+                    b.HasOne("Labb1_ResturantBookingSystem.Models.Table", null)
                         .WithMany("Bookings")
-                        .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Table");
+                        .HasForeignKey("TableId");
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Customer", b =>

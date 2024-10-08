@@ -1,4 +1,5 @@
-﻿using Labb1_ResturantBookingSystem.Data.Repos.IRepos;
+﻿using Labb1_ResturantBookingSystem.Data.Repos;
+using Labb1_ResturantBookingSystem.Data.Repos.IRepos;
 using Labb1_ResturantBookingSystem.Models;
 using Labb1_ResturantBookingSystem.Models.DTOs;
 using Labb1_ResturantBookingSystem.Services.IServices;
@@ -9,19 +10,17 @@ namespace Labb1_ResturantBookingSystem.Services
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly ITableRepository _tableRepository;
-        public BookingService(IBookingRepository bookingRepository, ITableRepository tableRepository)
+        private readonly ICustomerRepository _customerRepository;
+        public BookingService(IBookingRepository bookingRepository, ITableRepository tableRepository, ICustomerRepository customerRepository)
         {
             _bookingRepository = bookingRepository;
             _tableRepository = tableRepository;
+            _customerRepository = customerRepository;
         }
 
-        // Metod för att hämta alla bokningar.
         public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
         {
-            // Hämtar alla bokningar
             var bookings = await _bookingRepository.GetAllBookingsAsync();
-
-            // Konverterar Booking-entiteter till BookingDto-objekt och returnerar dessa.
             return bookings.Select(b => new BookingDto
             {
                 Id = b.BookingId,
@@ -29,20 +28,15 @@ namespace Labb1_ResturantBookingSystem.Services
                 PhoneNumber = b.PhoneNumber,
                 Email = b.Email,
                 NumberOfPeople = b.NumberOfPeople,
-                Date = b.Date,
-                
+                Date = b.Date
             });
         }
 
-        // Metod för att hämta en specifik bokning baserat på ID.
         public async Task<BookingDto> GetBookingByIdAsync(int id)
         {
-            // Hämtar bokningen baserat på ID
             var booking = await _bookingRepository.GetBookingByIdAsync(id);
-            // Returnerar null om bokningen inte hittas.
             if (booking == null) return null;
 
-            // Konverterar Booking-entiteten till en BookingDto och returnerar den.
             return new BookingDto
             {
                 Id = booking.BookingId,
@@ -50,67 +44,49 @@ namespace Labb1_ResturantBookingSystem.Services
                 PhoneNumber = booking.PhoneNumber,
                 Email = booking.Email,
                 NumberOfPeople = booking.NumberOfPeople,
-                Date = booking.Date,
-                
+                Date = booking.Date
             };
         }
 
-        // Metod för att kontrollera om ett bord är tillgängligt vid ett visst datum och tid.
-        public async Task<bool> IsTableAvailableAsync(int tableId, DateTime date)
+        public async Task<BookingDto> CreateBookingAsync(BookingDto bookingDto)
         {
-            // Hämtar alla bokningar 
-            var existingBookings = await _bookingRepository.GetAllBookingsAsync();
-            // Returnerar true om bordet är tillgängligt (ingen annan bokning för samma datum och tid).
-            return !existingBookings.Any(b => b.TableId == tableId && b.Date.Date == date.Date);
-        }
 
-        // Metod för att skapa en ny bokning.
-        public async Task CreateBookingAsync(BookingDto createBookingDto)
-        {
-            // Kontrollera om bordet är tillgängligt för det valda datumet och tiden.
-            if (!await IsTableAvailableAsync(createBookingDto.TableId, createBookingDto.Date))
-                throw new Exception("Bordet är inte tillgängligt för det valda datumet och tiden.");
-
-            // Skapar en ny bokning baserat på CreateBookingDto.
             var booking = new Booking
             {
-                CustomerName = createBookingDto.CustomerName,
-                TableId = createBookingDto.TableId,
-                Date = createBookingDto.Date               
+                CustomerName = bookingDto.CustomerName,
+                PhoneNumber = bookingDto.PhoneNumber,
+                Email = bookingDto.Email,
+                NumberOfPeople = bookingDto.NumberOfPeople,
+                Date = bookingDto.Date
             };
 
-            // Lägger till den nya bokningen och sparar ändringarna.
             await _bookingRepository.AddBookingAsync(booking);
             await _bookingRepository.SaveChangesAsync();
+
+            bookingDto.Id = booking.BookingId; 
+            return bookingDto;
         }
 
-        // Metod för att uppdatera en befintlig bokning.
-        public async Task UpdateBookingAsync(int id, BookingDto updateBookingDto)
+        public async Task<BookingDto> UpdateBookingAsync(int id, BookingDto bookingDto)
         {
-            // Hämtar den befintliga bokningen baserat på ID
-            var existingBooking = await _bookingRepository.GetBookingByIdAsync(id);
-            // Kastar ett undantag om bokningen inte hittas.
-            if (existingBooking == null)
-            {
-                throw new ArgumentException("Bokning hittades inte.");
-            }
+            var booking = await _bookingRepository.GetBookingByIdAsync(id);
+            if (booking == null) return null;
 
-            // Uppdaterar bokningens information med den nya informationen.
-            existingBooking.CustomerName = updateBookingDto.CustomerName;
-            existingBooking.PhoneNumber = updateBookingDto.PhoneNumber;
-            existingBooking.Email = updateBookingDto.Email;
-            existingBooking.TableId = updateBookingDto.TableId;
-            existingBooking.Date = updateBookingDto.Date;
+            booking.BookingId = bookingDto.Id;
+            booking.CustomerName = bookingDto.CustomerName;
+            booking.PhoneNumber = bookingDto.PhoneNumber;
+            booking.Email = bookingDto.Email;
+            booking.NumberOfPeople = bookingDto.NumberOfPeople;
+            booking.Date = bookingDto.Date;
 
-            // Uppdaterar bokningen  och sparar ändringarna.
-            await _bookingRepository.UpdateBookingAsync(existingBooking);
+            await _bookingRepository.UpdateBookingAsync(booking);
             await _bookingRepository.SaveChangesAsync();
+
+            return bookingDto;
         }
 
-        // Metod för att ta bort en bokning baserat på ID.
         public async Task DeleteBookingAsync(int id)
         {
-            // Tar bort bokningen och sparar ändringarna.
             await _bookingRepository.DeleteBookingAsync(id);
             await _bookingRepository.SaveChangesAsync();
         }

@@ -7,15 +7,16 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class MenuRepository : IMenuRepository
     {
-        private readonly MomokoRestuarantDbContext _context;
+        private readonly RestaurantDbContext _context;
 
-        public MenuRepository(MomokoRestuarantDbContext context)
+        public MenuRepository(RestaurantDbContext context)
         {
             _context = context;
         }
         public async Task AddDishAsync(Menu menu)
         {
             await _context.menus.AddAsync(menu);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteDishAsync(int id)
@@ -24,6 +25,7 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
             if (menuDish != null) 
             {
                 _context.menus.Remove(menuDish);
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -51,7 +53,7 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
         public async Task UpdateMenuAsync(Menu menuDish)
         {
             _context.menus.Update(menuDish);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
     }
 }

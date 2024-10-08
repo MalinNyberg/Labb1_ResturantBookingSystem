@@ -23,13 +23,5 @@ namespace Labb1_ResturantBookingSystem.Models
         [Required]
         public int NumberOfPeople { get; set; }
 
-
-        [ForeignKey("Table")]
-        public int TableId { get; set; }
-        public Table Table { get; set; }
-
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
     }
 }

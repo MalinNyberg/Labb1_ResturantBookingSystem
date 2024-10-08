@@ -3,7 +3,6 @@
     public class BookingDto
     {
         public int Id { get; set; }
-        
         public string CustomerName { get; set; }
 
         public string Email { get; set; }
@@ -14,9 +13,8 @@
 
         public DateTime Date { get; set; }
 
-        public int TableId { get; set; }
-
     }
+
 
     
 
