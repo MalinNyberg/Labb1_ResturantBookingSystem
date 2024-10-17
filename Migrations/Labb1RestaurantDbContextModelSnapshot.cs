@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Labb1_ResturantBookingSystem.Migrations
 {
-    [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Labb1RestaurantDbContext))]
+    partial class Labb1RestaurantDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -51,7 +51,7 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TableId")
+                    b.Property<int>("TableId")
                         .HasColumnType("int");
 
                     b.HasKey("BookingId");
@@ -112,11 +112,14 @@ namespace Labb1_ResturantBookingSystem.Migrations
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Table", b =>
                 {
-                    b.Property<int>("TableId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TableId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsTableAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
@@ -124,7 +127,7 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     b.Property<int>("TableNumber")
                         .HasColumnType("int");
 
-                    b.HasKey("TableId");
+                    b.HasKey("Id");
 
                     b.ToTable("tables");
                 });
@@ -135,9 +138,13 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         .WithMany("Bookings")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("Labb1_ResturantBookingSystem.Models.Table", null)
+                    b.HasOne("Labb1_ResturantBookingSystem.Models.Table", "Table")
                         .WithMany("Bookings")
-                        .HasForeignKey("TableId");
+                        .HasForeignKey("TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Table");
                 });
 
             modelBuilder.Entity("Labb1_ResturantBookingSystem.Models.Customer", b =>

@@ -1,5 +1,6 @@
 ﻿using Labb1_ResturantBookingSystem.Models;
 using Labb1_ResturantBookingSystem.Models.DTOs;
+using Labb1_ResturantBookingSystem.Services;
 using Labb1_ResturantBookingSystem.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,10 +40,10 @@ namespace Labb1_ResturantBookingSystem.Controllers
             try
             {
                 
-                var createdBookingDto = await _bookingService.CreateBookingAsync(bookingDto);
+                await _bookingService.CreateBookingAsync(bookingDto);
 
                 // Returnera den skapade bokningen med statuskod 201 (Created)
-                return CreatedAtAction(nameof(GetBookingById), new {  id = createdBookingDto.Id }, createdBookingDto);
+                return Created();
             }
             catch (Exception ex)
             {
@@ -63,6 +64,34 @@ namespace Labb1_ResturantBookingSystem.Controllers
         {
             await _bookingService.DeleteBookingAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("/Booking/IsTableAvailable")]
+        public async Task<IActionResult> IsTableAvailable([FromQuery] int tableId, [FromQuery] DateTime date)
+        {
+            try
+            {
+                bool isAvailable = await _bookingService.IsTableAvailableAsync(tableId, date);
+                if (isAvailable)
+                {
+                    return Ok("The table is available.");
+                }
+                else
+                {
+                    return NotFound("The table is unavailable");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ett fel uppstod: {ex.Message}");
+            }
+        }
+
+        [HttpGet("/Booking/AvailableTables/{date}")]
+        public async Task<ActionResult<IEnumerable<Table>>> AvailableTablesAtSpecificDate(DateTime date)
+        {
+            var listOfAvailableTables = await _bookingService.AvailableTablesAsync(date);
+            return Ok(listOfAvailableTables);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Labb1_ResturantBookingSystem.Services
             };
         }
 
-        public async Task<BookingDto> CreateBookingAsync(BookingDto bookingDto)
+        public async Task CreateBookingAsync(BookingDto bookingDto)
         {
 
             var booking = new Booking
@@ -57,14 +57,38 @@ namespace Labb1_ResturantBookingSystem.Services
                 PhoneNumber = bookingDto.PhoneNumber,
                 Email = bookingDto.Email,
                 NumberOfPeople = bookingDto.NumberOfPeople,
+                TableId = bookingDto.TableId,
                 Date = bookingDto.Date
             };
 
             await _bookingRepository.AddBookingAsync(booking);
-            await _bookingRepository.SaveChangesAsync();
 
-            bookingDto.Id = booking.BookingId; 
-            return bookingDto;
+        }
+
+        public async Task<bool> IsTableAvailableAsync(int tableId, DateTime date)
+        {
+            return await _bookingRepository.IsTableAvailableAsync(tableId, date);
+        }
+
+        public async Task<IEnumerable<Table>> AvailableTablesAsync(DateTime date)
+        {
+            var listOfTables = await _tableRepository.GetAllTablesAsync();
+
+            List<Table> listOfAvailableTables = listOfTables.ToList();
+
+            foreach (Table table in listOfTables)
+            {
+                bool isTableBooked = await _bookingRepository.IsTableAvailableAsync(table.Id, date);
+
+                if (isTableBooked)
+                {
+                    var tableToRemove = listOfAvailableTables.SingleOrDefault(t => t.Id == table.Id);
+                    listOfAvailableTables.Remove(tableToRemove);
+                };
+            }
+
+            return listOfAvailableTables;
+            
         }
 
         public async Task<BookingDto> UpdateBookingAsync(int id, BookingDto bookingDto)
@@ -80,7 +104,7 @@ namespace Labb1_ResturantBookingSystem.Services
             booking.Date = bookingDto.Date;
 
             await _bookingRepository.UpdateBookingAsync(booking);
-            await _bookingRepository.SaveChangesAsync();
+            
 
             return bookingDto;
         }
@@ -88,7 +112,7 @@ namespace Labb1_ResturantBookingSystem.Services
         public async Task DeleteBookingAsync(int id)
         {
             await _bookingRepository.DeleteBookingAsync(id);
-            await _bookingRepository.SaveChangesAsync();
+            
         }
     }
 }

@@ -10,5 +10,8 @@ namespace Labb1_ResturantBookingSystem.Data.Repos.IRepos
         Task UpdateTableAsync(Table table);
         Task DeleteTableAsync(int id);
         Task<bool> SaveChangesAsync();
+        bool IsTableAvailable(int tableId, DateTime bookingTime);
+
+
     }
 }

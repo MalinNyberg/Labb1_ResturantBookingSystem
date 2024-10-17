@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Labb1_ResturantBookingSystem.Data
 {
-    public class RestaurantDbContext : DbContext
+    public class Labb1RestaurantDbContext : DbContext
     {
-        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        public Labb1RestaurantDbContext(DbContextOptions<Labb1RestaurantDbContext> options) : base(options)
         {
 
         }

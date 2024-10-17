@@ -9,11 +9,15 @@
 
         public string PhoneNumber { get; set; }
 
+        public int TableId { get; set; }
+
         public int NumberOfPeople { get; set; }
 
         public DateTime Date { get; set; }
 
     }
+
+  
 
 
     

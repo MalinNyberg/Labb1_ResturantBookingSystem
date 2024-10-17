@@ -44,14 +44,15 @@ namespace Labb1_ResturantBookingSystem.Migrations
                 name: "tables",
                 columns: table => new
                 {
-                    TableId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TableNumber = table.Column<int>(type: "int", nullable: false),
-                    NumberOfSeats = table.Column<int>(type: "int", nullable: false)
+                    NumberOfSeats = table.Column<int>(type: "int", nullable: false),
+                    IsTableAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tables", x => x.TableId);
+                    table.PrimaryKey("PK_tables", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,8 +66,8 @@ namespace Labb1_ResturantBookingSystem.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: true),
-                    TableId = table.Column<int>(type: "int", nullable: true)
+                    TableId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,7 +81,8 @@ namespace Labb1_ResturantBookingSystem.Migrations
                         name: "FK_bookings_tables_TableId",
                         column: x => x.TableId,
                         principalTable: "tables",
-                        principalColumn: "TableId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

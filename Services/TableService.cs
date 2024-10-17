@@ -24,7 +24,7 @@ namespace Labb1_ResturantBookingSystem.Services
             };
 
             await _tableRepository.AddTableAsync(table);
-            await _tableRepository.SaveChangesAsync();
+            
         }
 
         //metod för att radera ett bord
@@ -42,7 +42,7 @@ namespace Labb1_ResturantBookingSystem.Services
             
             return tables.Select(t => new TableDto
             {
-                TableId = t.TableId,
+                TableId = t.Id,
                 NumberOfSeats = t.NumberOfSeats,
                 TableNumber = t.TableNumber
             });
@@ -57,7 +57,7 @@ namespace Labb1_ResturantBookingSystem.Services
             
             return new TableDto
             {
-                TableId = table.TableId,
+                TableId = table.Id,
                 NumberOfSeats = table.NumberOfSeats,
                 TableNumber = table.TableNumber
             };
@@ -78,5 +78,7 @@ namespace Labb1_ResturantBookingSystem.Services
             await _tableRepository.UpdateTableAsync(existingTable);
             await _tableRepository.SaveChangesAsync();
         }
+
+       
     }
 }

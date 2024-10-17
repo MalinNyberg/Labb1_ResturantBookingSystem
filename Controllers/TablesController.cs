@@ -44,16 +44,12 @@ namespace Labb1_ResturantBookingSystem.Controllers
 
         // POST-metod för att skapa ett nytt bord.
         [HttpPost("/CreateTable")]
-        public async Task<ActionResult<TableDto>> CreateTableAsync(CreateTableDto createTableDto)
+        public async Task<ActionResult> CreateTableAsync(CreateTableDto createTableDto)
         {
             try
-            {
-                // Skapar ett nytt bord 
+            {               
                 await _tableService.CreateTableAsync(createTableDto);
-                // Hämtar det skapade bordet baserat på bordets nummer (justera vid behov).
-                var createdTable = await _tableService.GetTableByIdAsync(createTableDto.TableNumber);
-                // Returnerar det skapade bordet med statuskod 201 (Created)
-                return CreatedAtAction(nameof(GetTableAsync), new { id = createdTable.TableId }, createdTable);
+                return Created();
             }
             catch (Exception ex)
             {

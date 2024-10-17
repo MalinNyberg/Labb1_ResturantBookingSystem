@@ -6,9 +6,9 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class BookingRepository : IBookingRepository
     {
-        private readonly RestaurantDbContext _context;
+        private readonly Labb1RestaurantDbContext _context;
 
-        public BookingRepository(RestaurantDbContext context)
+        public BookingRepository(Labb1RestaurantDbContext context)
         {
             _context = context;
         }
@@ -31,11 +31,19 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
         public async Task AddBookingAsync(Booking booking)
         {
             await _context.bookings.AddAsync(booking);
+            await _context.SaveChangesAsync();
+
         }
 
         public async Task UpdateBookingAsync(Booking booking)
         {
             _context.bookings.Update(booking);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsTableAvailableAsync(int tableId, DateTime date)
+        {
+            return await _context.bookings.AnyAsync(b => b.TableId == tableId && b.Date == date);
         }
 
         public async Task DeleteBookingAsync(int id)
@@ -44,7 +52,10 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
             if (booking != null)
             {
                 _context.bookings.Remove(booking);
+                await _context.SaveChangesAsync();
             }
+
+
         }
         public async Task SaveChangesAsync() 
         {

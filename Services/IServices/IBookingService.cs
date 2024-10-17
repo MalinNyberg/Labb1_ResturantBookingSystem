@@ -7,7 +7,9 @@ namespace Labb1_ResturantBookingSystem.Services.IServices
     {
         Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
         Task<BookingDto> GetBookingByIdAsync(int id);
-        Task<BookingDto> CreateBookingAsync(BookingDto bookingDto);
+        Task CreateBookingAsync(BookingDto bookingDto);
+        Task<bool> IsTableAvailableAsync(int tableId, DateTime date);
+        Task<IEnumerable<Table>> AvailableTablesAsync(DateTime date);
         Task<BookingDto> UpdateBookingAsync(int id, BookingDto bookingDto);
         Task DeleteBookingAsync(int id);
     }

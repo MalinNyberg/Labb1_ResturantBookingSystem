@@ -6,15 +6,16 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
 {
     public class TableRepository : ITableRepository
     {
-        private readonly RestaurantDbContext _context;
+        private readonly Labb1RestaurantDbContext _context;
 
-        public TableRepository(RestaurantDbContext context)
+        public TableRepository(Labb1RestaurantDbContext context)
         {
             _context = context;
         }
         public async Task AddTableAsync(Table table )
         {
             await _context.tables.AddAsync(table);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteTableAsync(int id)
@@ -23,6 +24,7 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
             if (table != null)
             {
                 _context.tables.Remove(table);
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -44,7 +46,16 @@ namespace Labb1_ResturantBookingSystem.Data.Repos
         public async Task UpdateTableAsync(Table table)
         {
             _context.tables.Update(table);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
+        }
+
+        public bool IsTableAvailable(int tableId, DateTime bookingTime)
+        {
+            // Kontrollera om bordet har en bokning som överlappar med den begärda tiden
+            var isBooked = _context.bookings
+                .Any(b => b.BookingId == tableId && b.Date == bookingTime);
+
+            return !isBooked;  // Returnera true om bordet INTE är bokat
         }
     }
 }
