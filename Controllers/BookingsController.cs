@@ -35,7 +35,7 @@ namespace Labb1_ResturantBookingSystem.Controllers
         }
 
         [HttpPost("/Booking/CreateBooking")]
-        public async Task<ActionResult<BookingDto>> CreateBooking(BookingDto bookingDto)
+        public async Task<ActionResult> CreateBooking(BookingDto bookingDto)
         {
             try
             {
